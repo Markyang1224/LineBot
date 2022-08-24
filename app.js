@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const app = express();
 dotenv.config();
+const getdata = require("./GetData");
 
 const bot = linebot({
   channelId: process.env.CHANNELID,
@@ -10,15 +11,21 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNELACCESSTOKEN,
 });
 
-bot.on("message", (event) => {
-  event
-    .reply("Hello你剛剛說的是: " + event.message.text)
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+bot.on("message", async (event) => {
+  let res = await getdata(event.message.text);
+  // event.message.text
+  if (res == null) {
+    event.reply("Can't find the data");
+  } else {
+    event
+      .reply(res)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 });
 
 bot.listen("/linewebhook", 3000, () => {
