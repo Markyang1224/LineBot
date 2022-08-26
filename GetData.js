@@ -7,7 +7,7 @@ async function getdata(code) {
   const Data = res.data;
   for (let i = 0; i < Data.length; i++) {
     if (code == Data[i].Code) {
-      return Data[i].Name;
+      return Data[i];
     }
   }
 

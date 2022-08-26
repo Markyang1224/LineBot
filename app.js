@@ -11,17 +11,18 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNELACCESSTOKEN,
 });
 
+//當觸發webhook event時, 會自動執行
 bot.on("message", async (event) => {
-  let res = await getdata(event.message.text);
+  let Data = await getdata(event.message.text);
   // event.message.text
-  if (res == null) {
+  if (!Data) {
     event.reply("Can't find the data");
   } else {
     event
-      .reply(res)
-      .then((data) => {
-        console.log(data);
-      })
+      .reply(
+        `代號: ${Data.Code}\n名稱: ${Data.Name}\n交易量: ${Data.TradeVolume}\n開盤價: ${Data.OpeningPrice}\n最高價: ${Data.HighestPrice}\n最低價: ${Data.LowestPrice}\n收盤價: ${Data.ClosingPrice}`
+      )
+      .then((data) => {})
       .catch((error) => {
         console.log(error);
       });
