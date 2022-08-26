@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const app = express();
 dotenv.config();
-const getdata = require("./GetData");
+const GetStockData = require("./GetStockData");
 
 const bot = linebot({
   channelId: process.env.CHANNELID,
@@ -13,14 +13,14 @@ const bot = linebot({
 
 //當觸發webhook event時, 會自動執行
 bot.on("message", async (event) => {
-  let Data = await getdata(event.message.text);
+  let Data = await GetStockData(event.message.text); // 抓資料
   // event.message.text
-  if (!Data) {
-    event.reply("Can't find the data");
+  if (Data == null) {
+    event.reply("Can't find the data , Please type the correct code");
   } else {
     event
       .reply(
-        `代號: ${Data.Code}\n名稱: ${Data.Name}\n交易量: ${Data.TradeVolume}\n開盤價: ${Data.OpeningPrice}\n最高價: ${Data.HighestPrice}\n最低價: ${Data.LowestPrice}\n收盤價: ${Data.ClosingPrice}`
+        `名稱: ${Data.name}\n代號: ${Data.code}\n成交: ${Data.deal}\n開盤: ${Data.start}\n最高: ${Data.highest}\n最低: ${Data.lowest}\n昨日收盤: ${Data.yesterday}\n漲跌: ${Data.upordown}`
       )
       .then((data) => {})
       .catch((error) => {
